@@ -67,9 +67,15 @@ for version in $versions; do
   echo "==> tagged: ${image}:${tag}"
 done
 
-# Tag latest (based on variant or latest)
-if [ -z "$nolatest" ]; then
-    latest=${variant:-latest}
+## Base tag (use variant or latest).
+#  Tag latest only if nolatest is not provided.
+
+latest=${variant:-latest}
+
+if [ "$latest" = "latest" ] && [ -z "$nolatest" ]; then   
+    docker tag ${tempimage} ${image}:${latest}
+    echo "==> tagged: ${image}:${latest}"
+elif [ "$latest" != "latest" ]
     docker tag ${tempimage} ${image}:${latest}
     echo "==> tagged: ${image}:${latest}"
 fi
