@@ -1,0 +1,78 @@
+#!/bin/sh
+
+
+usage=`cat <<EHD
+
+Usage: $0 [-l version_tags] [-v variant] [-nh] image [docker-build-opts]
+
+    Builds and tags a docker image using version tags from a container label.
+
+    -l version_tags     - specifies label which stores version tags (default: version_tags).
+    -v variant          - specifies variant which is appended to versions (aka: image:16.04-variant).
+    -n                  - specifies whether not to tag the latest label.
+    -h                  - prints this help.
+
+    docker-build-options    - a list of options passed to docker build, note that there's no need
+                              to pass -t.
+EHD`
+
+# Parse options
+while getopts "l:v:nh" opt; do
+    case $opt in
+        l)
+            versions_label=$OPTARG
+            ;;
+        v)
+            variant=$OPTARG
+            ;;
+        n)
+            nolatest=yes
+            ;;
+        h)
+            echo "${usage}"; exit 0;
+            ;;
+        \?)
+            error=yes
+            ;;
+    esac
+done
+
+## =============================================================================
+#
+
+# Abort on error
+[ -n "$error" ] && { echo "${usage}"; exit 1; }
+
+# ==== DEFAULTS ====
+#
+shift $((OPTIND-1))
+tempimage=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
+variant=${variant}
+nolatest=${nolatest}
+versions_label=${versions_label:-version_tags}
+image=$1; shift
+
+# Build container 
+docker build -t ${tempimage} $@ || exit $?
+
+# Extract tag versions
+versions=$(docker inspect -f "{{.Config.Labels.$versions_label}}" ${tempimage} | sed -r -e 's/"|\[|\]//g' -e 's/,/ /g')
+
+# Create tags from the list
+for version in $versions; do
+  tag=${version}-${variant}
+  tag=${tag%-}
+
+  docker tag ${tempimage} ${image}:${tag}
+  echo "==> tagged: ${image}:${tag}"
+done
+
+# Tag latest (based on variant or latest)
+if [ -n "$nolatest" ]; then
+    latest=${variant:-latest}
+    docker tag ${tempimage} ${image}:${latest}
+    echo "==> tagged: ${image}:${latest}"
+fi
+
+# Cleanup the temporary image
+docker rmi ${tempimage}
