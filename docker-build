@@ -75,7 +75,7 @@ latest=${variant:-latest}
 if [ "$latest" = "latest" ] && [ -z "$nolatest" ]; then   
     docker tag ${tempimage} ${image}:${latest}
     echo "==> tagged: ${image}:${latest}"
-elif [ "$latest" != "latest" ]
+elif [ "$latest" != "latest" ]; then
     docker tag ${tempimage} ${image}:${latest}
     echo "==> tagged: ${image}:${latest}"
 fi
