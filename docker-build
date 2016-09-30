@@ -53,11 +53,7 @@ versions_label=${versions_label:-version_tags}
 image=$1; shift
 
 # Build container
-if [ x"$TRAVIS" = x"true" ]; then
-  travis_wait docker build -t ${tempimage} $@ || exit $?
-else
-  docker build -t ${tempimage} $@ || exit $?
-fi
+./wrap docker build -t ${tempimage} $@ || exit $?
 
 # Extract tag versions
 versions=$(docker inspect -f "{{.Config.Labels.$versions_label}}" ${tempimage} | sed -r -e 's/"|\[|\]//g' -e 's/,/ /g')
