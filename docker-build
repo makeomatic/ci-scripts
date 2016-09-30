@@ -53,7 +53,7 @@ versions_label=${versions_label:-version_tags}
 image=$1; shift
 
 # Build container
-./wrap docker build -t ${tempimage} $@ || exit $?
+./wrap.rb docker build -t ${tempimage} $@ || exit $?
 
 # Extract tag versions
 versions=$(docker inspect -f "{{.Config.Labels.$versions_label}}" ${tempimage} | sed -r -e 's/"|\[|\]//g' -e 's/,/ /g')
