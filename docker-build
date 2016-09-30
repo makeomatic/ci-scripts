@@ -52,8 +52,8 @@ nolatest=${nolatest}
 versions_label=${versions_label:-version_tags}
 image=$1; shift
 
-# Build container 
-docker build -t ${tempimage} $@ || exit $?
+# Build container
+docker build -t ${tempimage} $@ > /dev/null || exit $?
 
 # Extract tag versions
 versions=$(docker inspect -f "{{.Config.Labels.$versions_label}}" ${tempimage} | sed -r -e 's/"|\[|\]//g' -e 's/,/ /g')
@@ -72,7 +72,7 @@ done
 
 latest=${variant:-latest}
 
-if [ "$latest" = "latest" ] && [ -z "$nolatest" ]; then   
+if [ "$latest" = "latest" ] && [ -z "$nolatest" ]; then
     docker tag ${tempimage} ${image}:${latest}
     echo "==> tagged: ${image}:${latest}"
 elif [ "$latest" != "latest" ]; then
