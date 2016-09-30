@@ -6,13 +6,13 @@ This repository contains helper scripts useful for usage with CI systems.
 
 ```
 # install master
-curl -sSL https://github.com/stackfeed/ci-scripts/raw/master/install.sh | sh -s
+curl -sSL https://github.com/makeomatic/ci-scripts/raw/master/install.sh | sh -s
 
 # install from a ref
-curl -sSL https://github.com/stackfeed/ci-scripts/raw/master/install.sh | sh -s -- -r mycommit_tag_or_branch
+curl -sSL https://github.com/makeomatic/ci-scripts/raw/master/install.sh | sh -s -- -r mycommit_tag_or_branch
 
 # help
-curl -sSL https://github.com/stackfeed/ci-scripts/raw/master/install.sh | sh -s -- -h
+curl -sSL https://github.com/makeomatic/ci-scripts/raw/master/install.sh | sh -s -- -h
 ```
 
 ## Scripts

@@ -1,11 +1,11 @@
 #!/bin/sh
 
-gitrepo=https://github.com/stackfeed/ci-scripts.git
+gitrepo=https://github.com/makeomatic/ci-scripts.git
 usage=`cat <<EHD
 
 Usage: $0 [-r gitref] [directory]
 
-    Installs CI helper scripts from github.com/stackfeed/ci-scripts
+    Installs CI helper scripts from github.com/makeomatic/ci-scripts
     into directory (default ~/ci-scripts).
 EHD`
 
