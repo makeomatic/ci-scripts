@@ -87,7 +87,8 @@ image=$1; shift
 travis_wait docker build -t ${tempimage} $@ || exit $?
 
 # Extract tag versions
-versions=$(docker inspect -f "{{.Config.Labels.$versions_label}}" ${tempimage} | sed -r -e 's/"|\[|\]//g' -e 's/,/ /g')
+[ `uname` = "Darwin" ] && opts="-E" || opts="-r"
+versions=$(docker inspect -f "{{.Config.Labels.$versions_label}}" ${tempimage} | sed $opts -e 's/"|\[|\]//g' -e 's/,/ /g')
 
 # Create tags from the list
 for version in $versions; do
