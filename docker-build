@@ -77,7 +77,7 @@ travis_jigger() {
 # ==== DEFAULTS ====
 #
 shift $((OPTIND-1))
-tempimage=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
+tempimage=$(cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 32 | head -n 1)
 variant=${variant}
 nolatest=${nolatest}
 versions_label=${versions_label:-version_tags}
